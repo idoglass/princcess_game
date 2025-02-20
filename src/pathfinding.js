@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import { World } from './world';
 import { log } from 'three/tsl';
-
-const getKey = (coords) => `${coords.x}-${coords.y}`
+import { getKey } from './utils/util';
 
 
 /**
@@ -47,7 +46,7 @@ export function search(start, end, world) {
         counter++;
 
 
-        if(candidate.x === end.x && candidate.y === end.y) {
+        if(candidate.x === end.x && candidate.z === end.z) {
             console.log(candidate);
             pathFound = true;
             break;
@@ -78,7 +77,7 @@ export function search(start, end, world) {
     //reconstruct the path
     const path = [end];
     let current = path[0];
-    while (current.x !== start.x || current.y !== start.y) {
+    while (current.x !== start.x || current.z !== start.z) {
         const prev = cameFrom.get(getKey(current));
         path.push(prev);
         current = prev;
@@ -90,7 +89,7 @@ export function search(start, end, world) {
 
 /**
  * 
- * @param {THREE.Vector2} coords 
+ * @param {THREE.Vector3} coords 
  * @param {World} world
  * @param {Map<string, number>} cost
  * @returns {THREE.Vector2[]}
@@ -101,19 +100,19 @@ function getNeighbors(coords, world, cost) {
 
     // Left
     if (coords.x > 0) {
-        neighbors.push(new THREE.Vector2(coords.x - 1, coords.y));
+        neighbors.push(new THREE.Vector3(coords.x - 1, 0, coords.z));
     }
     // Right
     if (coords.x < world.width - 1) {
-        neighbors.push(new THREE.Vector2(coords.x + 1, coords.y));
+        neighbors.push(new THREE.Vector3(coords.x + 1, 0,coords.z));
     }
     // Top
-    if (coords.y > 0) {
-        neighbors.push(new THREE.Vector2(coords.x, coords.y - 1));
+    if (coords.z > 0) {
+        neighbors.push(new THREE.Vector3(coords.x, 0,coords.z - 1));
     }
     // Bottom
-    if (coords.y < world.height - 1) {
-        neighbors.push(new THREE.Vector2(coords.x, coords.y + 1));
+    if (coords.z < world.height - 1) {
+        neighbors.push(new THREE.Vector3(coords.x, 0,coords.z + 1));
     }
 
     const newCost = cost.get(getKey(coords)) + 1;
