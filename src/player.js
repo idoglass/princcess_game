@@ -7,6 +7,9 @@ export class Player extends THREE.Mesh {
     raycaster = new THREE.Raycaster();
     pointer = new THREE.Vector2();
 
+    path = [] ;
+    pathIndex = 0;
+
     constructor(camera, world) {
         super();
         this.geometry = new THREE.CapsuleGeometry(0.25,0.5);
@@ -14,7 +17,6 @@ export class Player extends THREE.Mesh {
         this.position.set(5.5,0.25,5.5)
 
         this.camera = camera;
-        this.terrain = world.terrain;
         this.world = world;
 
         window.addEventListener( 'mousedown', this.onMouseDown.bind(this) );
@@ -35,7 +37,7 @@ export class Player extends THREE.Mesh {
         this.raycaster.setFromCamera( coords, this.camera );
 
         // calculate objects intersecting the picking ray
-        const intersection = this.raycaster.intersectObject( this.terrain );
+        const intersection = this.raycaster.intersectObject( this.world.terrain );
 
         if ( intersection.length > 0 ) {
 
@@ -48,9 +50,31 @@ export class Player extends THREE.Mesh {
                 Math.floor(this.position.x),
                 Math.floor(this.position.z)
             )
-            search(playerCoords, selectedCoords, this.world)
-            
+            this.path = search(playerCoords, selectedCoords, this.world)
+
+            if(this.path === null) return;
+            this.world.path.clear();
+            for (let index = 0; index < this.path.length; index++) {
+                const coords = this.path[index];
+                const geometry = new THREE.BoxGeometry(0.1,0.1,0.1);
+                const material = new THREE.MeshStandardMaterial({color: 0x00ff00});
+                const cube = new THREE.Mesh(geometry, material);
+                cube.position.set(coords.x + 0.5, 0.1, coords.y + 0.5);
+                this.world.path.add(cube);
+            }  
+            this.pathIndex = 0;
+            this.pathUpdater = setInterval(this.updatePosition.bind(this), 800);
         }
+    }
+
+    updatePosition() {
+        if(this.pathIndex === this.path.length) {
+            clearInterval(this.pathUpdater);
+            return;
+        }
+        const current = this.path[this.pathIndex];
+        this.position.set(current.x + 0.5, 0.25, current.y + 0.5);
+        this.pathIndex++;
     }
 
 }

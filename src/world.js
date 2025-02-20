@@ -6,6 +6,7 @@ export class World extends THREE.Group {
 
     getKey = (coords) => `${coords.x}-${coords.y}`
 
+
     constructor(width, height) {
         super();
 
@@ -14,7 +15,13 @@ export class World extends THREE.Group {
         this.treesCount = 20;
         this.rocksCount = 20;
         this.rocks = new THREE.Group();
+        this.add(this.rocks);
+
         this.trees = new THREE.Group();
+        this.add(this.trees);
+
+        this.path = new THREE.Group();
+        this.add(this.path);
 
         this.createWorld();
     }
@@ -85,7 +92,6 @@ export class World extends THREE.Group {
             flatShading: true
         });
 
-        this.add(this.trees)
 
         this.trees.clear();
 
@@ -121,8 +127,6 @@ export class World extends THREE.Group {
 
         const minRockHeight = 0.5;
         const maxRockHeight = 1;
-
-        this.add(this.rocks)
 
         this.rocks.clear();
 
