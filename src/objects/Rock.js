@@ -5,7 +5,7 @@ import { getRandomFloat } from '../utils/random';
 
 const rockGeometry = new THREE.SphereGeometry(
     1,
-    8,
+    7,
     5
 );
 const rockMaterial = new THREE.MeshStandardMaterial({
@@ -20,14 +20,9 @@ export class Rock extends GameObject {
     minRockRadius = 0.1;
     maxRockRadius = 0.3;
 
-    minRockHeight = 0.1;
-    maxRockHeight = 0.3;
+    minRockHeight = 0.2;
+    maxRockHeight = 0.4;
 
-
-    /**
-     * @type {THREE.Vector3}
-     */
-    coords;
 
 
     /**
@@ -37,19 +32,19 @@ export class Rock extends GameObject {
      * @param {THREE.Material} material
      */
     constructor(coords) {
-        super(coords, rockGeometry, rockMaterial);
+        const mesh = new THREE.Mesh (rockGeometry, rockMaterial)
+        mesh.position.set(0.5,0,0.5);
+        super(coords, mesh);        
         const radius = getRandomFloat(this.minRockRadius, this.maxRockRadius);
-        const height = getRandomFloat(this.minRockHeight, this.maxRockHeight);
+        const height = getRandomFloat(this.minRockHeight , this.maxRockHeight);
 
-        this.scale.set(radius, radius, radius);
+        this.mesh.scale.set(radius,height,radius)
         this.name = `Rock (${coords.x},${coords.y})`
-        
-        console.log(radius, height);
-        
+                
         this.position.set(
-            coords.x + 0.5,
-            coords.y + height / 2,
-            coords.z + 0.5
+            coords.x ,
+            this.minRockHeight - height ,
+            coords.z
         )
     }
 }

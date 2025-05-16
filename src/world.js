@@ -32,6 +32,8 @@ export class World extends THREE.Group {
         this.path = new THREE.Group();
         this.add(this.path);
 
+
+        this.players = new THREE.Group();
         this.createWorld();
     }
 
@@ -108,7 +110,7 @@ export class World extends THREE.Group {
     }
 
     createBushes() {
-        for (let index = 0; index < this.treesCount; index++) {
+        for (let index = 0; index < this.bushesCount; index++) {
             const coords = new THREE.Vector3(
                 Math.floor(this.width * Math.random()),
                 0,
@@ -135,6 +137,16 @@ export class World extends THREE.Group {
         return true;
     }
 
+    addPlayer(coords, object) { 
+        if (this.#objectMap.has(getKey(coords))) {
+            this.removeObject(coords)
+        }
+
+        this.players.add(object)
+        this.#objectMap.set(getKey(coords), object);
+    }
+
+
 
     createRocks() {
         for (let index = 0; index < this.rocksCount; index++) {
@@ -157,6 +169,40 @@ export class World extends THREE.Group {
      */
 
     getObject(coords) {
-        return this.#objectMap.get(getKey(coords)) ?? null
+
+       return this.#objectMap.get(getKey(coords)) ?? null
+    }
+
+    moveObject(obj,coords) {
+        const old_key = getKey(obj.coords)
+        const new_key = getKey(coords)
+
+        if (!this.#objectMap.has(old_key)) return;
+        const object = this.#objectMap.get(old_key);
+        this.#objectMap.delete(old_key);
+        this.#objectMap.set(new_key, object);
+        object.moveTo(coords)
+    }
+
+    removeObject(coords) {
+        const object = this.#objectMap.get(getKey(coords));
+        if (object) {
+            object.geometry.dispose();
+            object.material.dispose();
+        }
+        if (this.trees.children.includes(object)) {
+            this.trees.remove(object);
+        }
+
+        if (this.bushes.children.includes(object)) {
+            this.bushes.remove(object);
+        }
+
+        if (this.rocks.children.includes(object)) {
+            this.rocks.remove(object);
+        }
+
+
+        this.#objectMap.delete(getKey(coords));
     }
 }

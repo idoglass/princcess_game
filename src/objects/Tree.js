@@ -4,7 +4,7 @@ import { Const } from 'three/tsl';
 
 
 
-const treeGeometry = new THREE.ConeGeometry(1, 1, 8);
+const treeGeometry = new THREE.ConeGeometry(1, 2, 8);
 const treeMaterial = new THREE.MeshStandardMaterial({
     color: 0x305100,
     flatShading: true
@@ -12,14 +12,11 @@ const treeMaterial = new THREE.MeshStandardMaterial({
 
 export class Tree extends GameObject {
     
-    minTreeHeight = 0.9;
-    maxTreeHeight = 2.5;
+    minTreeHeight = 0.8;
+    maxTreeHeight = 1.2;
 
     treeRadius = 0.3;
-    /**
-     * @type {THREE.Vector3}
-     */
-    coords;
+
 
 
     /**
@@ -29,16 +26,19 @@ export class Tree extends GameObject {
      * @param {THREE.Material} material
      */
     constructor(coords) {
-        super(coords, treeGeometry, treeMaterial);
+        const mesh = new THREE.Mesh (treeGeometry, treeMaterial)
+        mesh.position.set(0.5,0,0.5);
+        super(coords, mesh);
 
         const height = this.minTreeHeight + Math.random() * (this.maxTreeHeight - this.minTreeHeight); 
-        this.scale.set(this.treeRadius, height, this.treeRadius);
+        this.mesh.scale.set(this.treeRadius,height,this.treeRadius)
+
         this.name = `Tree (${coords.x},${coords.y})`
         
         this.position.set(
-            coords.x + 0.5,
-            coords.y + height / 2,
-            coords.z + 0.5
+            coords.x,
+            height ,
+            coords.z
         )
     }
 }

@@ -19,7 +19,7 @@ export function search(start, end, world) {
     console.log(world.width, world.height);
     
     //if same space return
-    if(start.x === end.x && start.y === end.y) return [];
+    if(start.equals(end)) return [];
 
     let pathFound = false;
     const maxDistance = 20;
@@ -46,7 +46,7 @@ export function search(start, end, world) {
         counter++;
 
 
-        if(candidate.x === end.x && candidate.z === end.z) {
+        if(candidate.equals(end)) {
             console.log(candidate);
             pathFound = true;
             break;
@@ -77,7 +77,7 @@ export function search(start, end, world) {
     //reconstruct the path
     const path = [end];
     let current = path[0];
-    while (current.x !== start.x || current.z !== start.z) {
+    while (current.equals(start) === false) {
         const prev = cameFrom.get(getKey(current));
         path.push(prev);
         current = prev;

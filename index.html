@@ -1,13 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>My first three.js app</title>
-		<style>
-			body { margin: 0; }
-		</style>
-	</head>
-	<body>
-		<script type="module" src="src/main.js"></script>
-	</body>
+
+<head>
+	<meta charset="utf-8">
+	<title>My first three.js app</title>
+	<style>
+		body {
+			margin: 0;
+		}
+
+		#status-text {
+			font-family: sans-serif;
+			color: white;
+		}
+
+		#player-avatar {
+    height: 50px;
+    width: 50px;
+    margin: 5px;
+		}
+
+
+		#ui {
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			height: 60px;
+			padding: 8px;
+			position: absolute;
+			background-color: rgba(0, 0, 0, 0.5);
+			display: flex;
+		}
+	</style>
+</head>
+
+<body>
+	<script type="module" src="src/main.js"></script>
+	<div id="ui">
+		<div id="player-avatar"></div>
+		<div>
+			<div id="status-text"></div>
+			<div id="actions"></div>
+		</div>
+	</div>
+</body>
+
 </html>

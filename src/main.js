@@ -5,7 +5,8 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GUI } from  'three/addons/libs/lil-gui.module.min.js'
 
 import { World } from './world';
-import { Player } from './player';
+import { HumanPlayer } from './players/HumanPlayer';
+import { CombatManager } from './CombatManager';
 
 const gui = new GUI;
 const stats = new Stats()
@@ -30,8 +31,14 @@ controls.update();
 const world = new World(10,10);
 scene.add(world);
 
-const player = new Player(camera, world);
+const playerCoords = new THREE.Vector3(5,0,5);
+const player = new HumanPlayer(playerCoords, camera, world);
 scene.add(player)
+
+const player1Coords = new THREE.Vector3(4,0,5);
+const player1 = new HumanPlayer(player1Coords, camera, world);
+scene.add(player1)
+
 
 const sun = new THREE.DirectionalLight();
 sun.intensity = 3;
@@ -70,3 +77,8 @@ worldFolder.add(world, 'rocksCount', 1, 20, 1).name('Rocks')
 
 worldFolder.addColor(world.terrain.material, 'color')
 worldFolder.add(world, 'createWorld').name('Create World')
+
+
+const combatManager = new CombatManager;
+
+combatManager.takeTurns([player,player1], world)
